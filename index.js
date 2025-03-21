@@ -57,7 +57,22 @@ const prompt = "Hey, what's the weather in London?";
 
 client.chat.completions.create({
     model: 'gpt-3.5-turbo',
-    messages: [{role: 'user', content: prompt}],
+    messages: [
+        {role: 'system', content: SYSTEM_PROMPT},
+        {
+            role: 'developer',
+            content: '{ "type": "plan", "plan": "I will call the getWeatherDetails for London" }'
+        },
+        {
+            role: 'developer',
+            content: '{ "type": "action", "function": "getWeatherDetails", "input": "London" }'
+        },
+        {
+            role: 'developer',
+            content: '{ "type": "observation", "observation": "10°C" }'
+        },
+        {role: 'user', content: prompt}
+    ],
     max_tokens: 100
 }).then(response => {
     const botResponse = response.choices[0].message.content;
